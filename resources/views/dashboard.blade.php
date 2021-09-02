@@ -155,7 +155,6 @@
       <!-- /.row -->
     </div><!--/. container-fluid -->
   </section>
-
     <section class="content">
     <div class="container-fluid">
       <!-- Info boxes -->
@@ -238,6 +237,7 @@
     </div><!--/. container-fluid -->
   </section>
   
+  <input type="hidden" id="agentid" value="{{ $sip }}">
   <section class="content">
       <div class="container-fluid">
         <div class="row">
@@ -466,4 +466,73 @@
         })
     
 </script>
+<script type="text/javascript">
+        var token = "<?php echo csrf_token(); ?>";
+      var myVar;
+      var tabOpen = false;
+      $(function(){
+        i=0;
+        $(document).ready(function() {
+          console.log('page loaded');
+          myVar = setInterval(function(){ checkRecord() }, 5000);
+        });
+      });
+
+
+      function checkRecord() {
+        //call an ajax to check the record.
+        agent = $('#agentid').val();
+
+        if(agent == ''){
+          console.log('agent not given');
+          return;
+        }
+        else{
+          var url="{{url('getcallData')}}";
+          $.ajax({ 
+            type: 'POST', 
+            url:url,
+            data: { 
+              agent: agent,
+              _token:token
+            }, 
+            dataType: 'text',
+            success: function (data) {
+                if(data == 'NA-NA'){}
+                else{
+
+                    obj = JSON.parse(data);
+                    phone = obj[0].phone;
+                    console.log(phone);
+                    
+                        window.open('https://seavine.entertechbd.com/call/'+phone+'/4').focus();
+                        //clearInterval(myVar);
+                        tabOpen = true;
+                        var url2="{{url('updateCall')}}";
+                         $.ajax({ 
+                            type: 'POST', 
+                            url:url2, 
+                            data: { 
+                              agent: agent,
+                              _token:token
+                            }, 
+                            dataType: 'text',
+                            success: function (data) {
+                                
+                            }
+                          });
+
+                        //staus will be  done 
+                    
+                }
+                
+                console.log('request given:'+data);
+            }
+          });
+        }
+        
+
+    }
+
+    </script>
 @endsection

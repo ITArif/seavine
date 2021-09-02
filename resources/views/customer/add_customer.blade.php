@@ -184,7 +184,7 @@
                     <div class="col-md-6">
                         <div class="form-group">
                             <label>Phone<span style="color: red;">*</span></label>
-                            <input type="text" name="phone" id="phone" maxlength="11" pattern="\d{11}" class="form-control" value="{{old('phone')}}" placeholder="Phone">
+                            <input type="text" name="phone" id="phone" maxlength="11" pattern="\d{11}" class="form-control" value="{{ $number }}" placeholder="Phone" readonly="">
                               @if($errors->has('phone'))
                                   <span class="text-danger">{{ $errors->first('phone') }}</span>
                               @endif

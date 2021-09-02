@@ -67,7 +67,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/product/delete-product/{id}', 'ProductController@deleteProduct')->name('deleteProduct');
 
         // ALL CUSTOMER ROUTES
-        Route::get('/customer/add-customer', 'CustomerController@showAddCustomer')->name('showAddCustomer');
+        //Route::get('/customer/add-customer', 'CustomerController@showAddCustomer')->name('showAddCustomer');
         Route::post('/customer/store-customer', 'CustomerController@storeCustomer')->name('storeCustomer');
         Route::get('/customer/all-customer', 'CustomerController@allCustomer')->name('allCustomer');
         Route::get('/customer/all-datatable','CustomerController@customerData');
@@ -313,9 +313,29 @@ Route::middleware('auth')->group(function () {
 Route::group(['middleware'=>['role:admin']],function () {
  Route::get('/new/system/user', 'UserController@create')->name('add.user');
  Route::post('/store/new/system/user', 'UserController@store')->name('store.system.user');
- Route::get('/system/user/list', 'UserController@index');
+ Route::get('/system/user/list', 'UserController@index')->name('alluser.list');
  Route::get('/alluser/datatable','UserController@allUserDataTable'); 
  Route::get('/edit/system/user/{id}', 'UserController@edit')->name('edit.system.user');
  Route::post('/update/system/user/{id}', 'UserController@update')->name('update.system.user');
  Route::get('/delete/system/user/{id}', 'UserController@deleteUser');
 });
+
+//*******************Caller Type***************************//
+Route::group(['middleware'=>['role:agent']],function () {
+  Route::get('/all-caller','CallerTypeController@index_caller')->name('allCaller');
+  Route::get('/caller/datatable','CallerTypeController@allCallDataTable');    
+  Route::get('/caller-form','CallerTypeController@create')->name('caller.form');    
+  Route::post('/store-caller','CallerTypeController@store')->name('store.caller');
+  Route::get('/edit/caller/{id}', 'CallerTypeController@edit')->name('edit.caller');  
+  Route::post('/update/caller/{id}', 'CallerTypeController@update')->name('update.caller');  
+  Route::get('/delete/caller/{id}', 'CallerTypeController@deleteCaller');
+
+});
+
+///******************Call route (Agent)*************************///
+Route::post('/getcallData',['middleware'=>'auth','uses'=>'UserController@getcallData']);
+Route::post('/updateCall',['middleware'=>'auth','uses'=>'UserController@updateCall']);
+
+////*******************Call Route*******************************//
+Route::get('/call/{number}/{type}',[ 'middleware'=>'auth', 'uses'=>'CustomerController@call']);
+Route::get('/create/{number}',[ 'middleware'=>'auth', 'uses'=>'CustomerController@showAddCustomer'])->name('showAddCustomer');

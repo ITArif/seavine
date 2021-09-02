@@ -8,15 +8,10 @@ use App\Project;
 use DB;
 use Illuminate\Support\Facades\Session;
 use Yajra\DataTables\Facades\DataTables;
+use Redirect;
 
 class CustomerController extends Controller
 {
-    public function showAddCustomer()
-    {
-        $projects=Project::all();
-        //dd($projects);
-        return view('customer.add_customer',compact('projects'));
-    }
 
     public function allCustomer()
     {
@@ -244,5 +239,75 @@ class CustomerController extends Controller
         }else{
             return response()->json('error',422);
         }
+    }
+
+
+
+
+    ///********************Call*******************************//
+
+     public function call($number, $type) {
+        $data = [];
+        $status = "";
+        $button = "";
+        if($type) {
+            if($type == 1) {
+                $status = "Call on progress...................";
+            }
+            else if($type == 2) {
+                $status = "Call waiting........................";
+            }
+            else if($type == 3) {
+                $status = "Call is busy........................";
+            }
+            else if($type == 4) {
+                $status = "Call on progress...................";
+            }
+            else {
+                $status = "Invalid Status";
+            }
+        }
+        else {
+            $status = "Invalid Status";
+        }
+
+        $data['number'] = $number;
+        $data['type'] = $type;
+        $data['call_status'] = $status;
+        $data['get_record'] = DB::table('customers')->where('phone','=',$number)->get();
+        //dd($data['get_record']);
+        $key_press= DB::select("SELECT response AS button FROM callrecords WHERE EVENT = 'Key' AND source = '$number'");
+        //dd($key_press);
+        
+        foreach ($key_press as $value) {
+           
+            if ($value->button == 1) {
+               $button = "Doctor appointment";
+            }else if ($value->button == 2) {
+                 $button = "Information";
+            }else if ($value->button == 3) {
+                 $button = "Home Service";
+            }else if ($value->button == 4) {
+                 $button = "to speak with a doctor";
+            }else if ($value->button == 5) {
+                 $button = "membership plan";
+            }else if ($value->button == 0) {
+                 $button = "talk to with an agent";
+            }else{
+                 $button = "Nothing";
+            }
+           
+        }
+
+        $data['press_button']= $button;
+        //$data['button']= $message;
+        return view('customer.call_process', $data);
+    }
+
+    public function showAddCustomer($number)
+    {
+        $projects=Project::all();
+        $number = $number;
+        return view('customer.add_customer',compact('projects','number'));
     }
 }

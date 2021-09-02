@@ -402,34 +402,6 @@
       @endif
         <!-- End Employee menu  -->
 
-           <!--Start Customer menu -->  
-          <li class="nav-item has-treeview {{ request()->is('customer/*') ? 'menu-open' :''}}">
-            <a href="#" class="nav-link {{ request()->is('customer/*') ? 'active' :''}}">
-              <i class="nav-icon fas fa-user-tie text-blue"></i>
-              <p>
-                Customer
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{{ route('allCustomer') }}" class="nav-link {{ request()->is('customer/all-customer') ? 'active' :''}}">
-                  <i class="far fa-circle nav-icon text-blue"></i>
-                  <p>All Customer</p>
-                </a>
-              </li>
-
-              <li class="nav-item">
-                <a href="{{ route('showAddCustomer') }}" class="nav-link {{ request()->is('customer/add-customer') ? 'active' :''}}">
-                  <i class="far fa-circle nav-icon text-blue"></i>
-                  <p>Create Customer</p>
-                </a>
-              </li>
-
-            </ul>
-          </li>
-        <!--   end customer menu  -->
-
           <!-- Start Ledger menu  -->
 
           @if(Auth::user()->role=='admin' || Auth::user()->role=='accountent')
@@ -928,26 +900,20 @@
           </li>
         @endif
 
-          {{-- // Role manage menu --}}
+          {{-- //  Caller Type --}}
           <li class="nav-item has-treeview">
             <a href="#" class="nav-link">
               <i class="nav-icon fas fa-user-lock text-red"></i>
               <p>
-                Role manage
+                Caller Type
                 <i class="right fas fa-angle-left"></i>
               </p>
             </a>
             <ul class="nav nav-treeview">
               <li class="nav-item">
-                <a href="#" class="nav-link">
+                <a href="{{route('allCaller')}}" class="nav-link">
                   <i class="far fa-circle nav-icon text-red"></i>
-                  <p>All Role manage</p>
-                </a>
-              </li>
-              <li class="nav-item">
-                <a href="#" class="nav-link">
-                  <i class="far fa-circle nav-icon text-red"></i>
-                  <p>Create Role manage</p>
+                  <p>All Caller</p>
                 </a>
               </li>
             </ul>

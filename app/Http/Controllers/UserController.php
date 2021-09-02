@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Auth;
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use DB;
 use App\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -63,7 +64,8 @@ class UserController extends Controller
     }
 
     public function create(){
-        return view('system_user.new');
+        $data['sip_buddi'] = DB::select("SELECT * FROM sip_buddies");
+        return view('system_user.new',$data);
     }
 
     public function store(Request $request){
@@ -71,7 +73,8 @@ class UserController extends Controller
           'name'=>'required',
           'email'=>'required|email|unique:users,email',
           'password'=>'required',
-          'role'=>'required'
+          'role'=>'required',
+          'sip_buddi'=>'required'
       ]);
         //Store the data into the database
         $user=new User();
@@ -80,6 +83,7 @@ class UserController extends Controller
         $user->password=Hash::make($request->password);
         $user->status=1;
         $user->role=$request->role;
+        $user->sip_buddi=$request->sip_buddi;
         $user->save();
         return redirect()->back()->with('success', 'User role added successfully');
     }
@@ -111,23 +115,28 @@ class UserController extends Controller
 
     public function edit($id){
         $user=User::find($id);
-        return view('system_user.edit_system_user')->with('user',$user);
+        if ($user) {
+            $data2['sip_buddi'] = DB::select("SELECT * FROM sip_buddies");
+        }
+        return view('system_user.edit_system_user',$data2)->with('user',$user);
     }
 
     public function update(Request $request, $id){
-        $this->validate($request,[
-            'name'=>'required',
-            'email'=>'required|email|unique:users,email',
-            'role'=>'required'
-        ]);
+        // $this->validate($request,[
+        //     'name'=>'required',
+        //     'email'=>'required|email|unique:users,email',
+        //     'role'=>'required',
+        //     'sip_buddi'=>'required'
+        // ]);
         //Store the data into the database
         $user=User::find($id);
         $user->name=$request->name;
         $user->email=$request->email;
 //        $user->active=1;
         $user->role=$request->role;
+        $user->sip_buddi=$request->sip_buddi;
         $user->save();
-        return redirect()->back()->with('success', 'User Role Updated Successfully');
+        return redirect()->back()->with('success', 'User data Updated Successfully');
     }
 
     public function deleteUser(Request $request){
@@ -139,5 +148,24 @@ class UserController extends Controller
         }else{
             return response()->json('error',422);
         }
+    }
+
+    function getCallData(Request $request){
+        $agent = isset($request->agent)? $request->agent: '-1';
+        $query = "SELECT source as phone FROM callrecords where destination like '".$agent."%' and status='new' order by id desc limit 1";
+        $result = DB::select($query);
+
+        if(count($result)>0) {
+            echo json_encode($result);
+        }
+        else {
+            echo 'NA-NA';
+        }  
+    }
+
+    function updateCall(Request $request){
+        $agent = isset($request->agent)? $request->agent: '-1';
+        $query2  = "UPDATE callrecords SET status='done' where destination like '".$agent."%' ";
+        $result2 = DB::select($query2);
     }
 }

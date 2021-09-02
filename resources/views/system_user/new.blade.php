@@ -70,6 +70,7 @@
                     <select name="role" class="form-control">
                       <option value="">--select User Role--</option>
                       <option value="admin">Admin</option>
+                      <option value="agent">Agent</option>
                       <option value="accountent">Accountent</option>
                       <option value="project-manager">Project-Manager</option>
                       <option value="product-manager">Product-Manager</option>
@@ -80,14 +81,28 @@
                         <strong class="text-danger">{{ $errors->first('role') }}</strong>
                     @endif
                   </div>
-              </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>SIP Buddies </label>
+                     <select name="sip_buddi" class="form-control">
+                          <option value="">-- select one --</option>
+                          @foreach($sip_buddi as $val)
+                              <option value="{{ $val->name }}">{{ $val->name }}</option>
+                          @endforeach
+                      </select>
+                     @if($errors->has('sip_buddi'))
+                        <strong class="text-danger">{{ $errors->first('sip_buddi') }}</strong>
+                    @endif
+                  </div>
+                </div>
                   <!-- /.col -->
                 </div>
                 <!-- /.row -->
               </div>
                <div class="card-footer">
                  <button type="submit" class="btn btn-success ">Submit</button>
-                 <a href="#" type="submit" class="btn btn-info">Back</a>
+                 <a href="{{route('alluser.list')}}" type="submit" class="btn btn-info">Back</a>
               </div>
         </form>
       </div>

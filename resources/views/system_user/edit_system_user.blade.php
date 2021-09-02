@@ -52,6 +52,7 @@
                       <option value="">--select User Role--</option>
                       <option value="admin" {{$user->role=='admin'?'selected':''}}>Admin</option>
                       <option value="accountent" {{$user->role=='accountent'?'selected':''}}>Accountent</option>
+                      <option value="agent" {{$user->role=='agent'?'selected':''}}>Agent</option>
                       <option value="project-manager" {{$user->role=='project-manager'?'selected':''}}>Project-Manager</option>
                       <option value="product-manager" {{$user->role=='product-manager'?'selected':''}}>Product-Manager</option>
                       <option value="sells-manager" {{$user->role=='sells-manager'?'selected':''}}>Sells-Manager</option>
@@ -61,14 +62,30 @@
                         <strong class="text-danger">{{ $errors->first('role') }}</strong>
                     @endif
                   </div>
-              </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label>SIP Buddies </label>
+                     <select name="sip" class="form-control">
+                          <option value="{{ $user->sip_buddi }}">{{ $user->sip_buddi }}</option>
+                          @foreach($sip_buddi as $val)
+                              <option value="{{ $val->name }}">{{ $val->name }}</option>
+                          @endforeach
+                      </select>
+                      @if ($errors->has('sip'))
+                          <span class="help-block fred">
+                              <strong>{{ $errors->first('sip') }}</strong>
+                          </span>
+                      @endif
+                  </div>
+                </div>
                   <!-- /.col -->
                 </div>
                 <!-- /.row -->
               </div>
                <div class="card-footer">
                  <button type="submit" class="btn btn-success ">Update</button>
-                 <a href="#" type="submit" class="btn btn-info">Back</a>
+                 <a href="{{route('alluser.list')}}" type="submit" class="btn btn-info">Back</a>
               </div>
         </form>
       </div>
